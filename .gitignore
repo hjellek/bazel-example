@@ -1,0 +1,7 @@
+.idea
+.ijwb
+bazel-bazel-example
+bazel-bin
+bazel-out
+bazel-testlogs
+.DS_Store

@@ -1,0 +1,215 @@
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+RULES_JVM_EXTERNAL_TAG = "4.3"
+
+RULES_JVM_EXTERNAL_SHA = "6274687f6fc5783b589f56a2f1ed60de3ce1f99bc4e8f9edef3de43bdf7c6e74"
+
+http_archive(
+    name = "rules_jvm_external",
+    sha256 = RULES_JVM_EXTERNAL_SHA,
+    strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_TAG,
+    url = "https://github.com/bazelbuild/rules_jvm_external/archive/%s.zip" % RULES_JVM_EXTERNAL_TAG,
+)
+load("@rules_jvm_external//:defs.bzl", "maven_install")
+load("@rules_jvm_external//:specs.bzl", "maven")
+
+http_archive(
+    name = "rules_spring",
+    sha256 = "711ff9949bb1cc4dfc34f26114bb2989a2c820a300e536aebea652df1e08292c",
+    urls = [
+        "https://github.com/salesforce/rules_spring/releases/download/2.2.1/rules-spring-2.2.1.zip",
+    ],
+)
+
+load("@rules_spring//:repositories.bzl", "rules_spring_deps")
+
+rules_spring_deps()
+
+SPRING_BOOT_VERSION = "3.0.5"
+
+SPRING_VERSION = "6.0.7"
+
+JUNIT_JUPITER_VERSION = "5.9.1"
+
+JUNIT_PLATFORM_VERSION = "1.9.1"
+
+MOCKITO_VERSION = "4.8.1"
+
+maven_install(
+    name = "maven",
+    artifacts = [
+        "org.junit.jupiter:junit-jupiter-api:%s" % JUNIT_JUPITER_VERSION,
+        "org.junit.jupiter:junit-jupiter-engine:%s" % JUNIT_JUPITER_VERSION,
+        "org.junit.jupiter:junit-jupiter-params:%s" % JUNIT_JUPITER_VERSION,
+        "org.junit.platform:junit-platform-engine:%s" % JUNIT_PLATFORM_VERSION,
+        "org.junit.platform:junit-platform-suite-api:%s" % JUNIT_PLATFORM_VERSION,
+        "org.junit.platform:junit-platform-launcher:%s" % JUNIT_PLATFORM_VERSION,
+        "org.junit.platform:junit-platform-commons:%s" % JUNIT_PLATFORM_VERSION,
+        "org.junit.platform:junit-platform-console:%s" % JUNIT_PLATFORM_VERSION,
+        "org.springframework.boot:spring-boot-autoconfigure:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot-starter-web:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot-loader:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot-actuator:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot-actuator-autoconfigure:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot-autoconfigure:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot-starter-test:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot-starter-cache:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot-starter:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot-starter-logging:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot-test:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot-test-autoconfigure:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot-starter-webflux:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot-starter-validation:%s" % SPRING_BOOT_VERSION,
+        "org.springframework:spring-expression:%s" % SPRING_VERSION,
+        "org.springframework:spring-web:%s" % SPRING_VERSION,
+        "org.springframework:spring-webmvc:%s" % SPRING_VERSION,
+        "org.springframework:spring-test:%s" % SPRING_VERSION,
+        "org.assertj:assertj-core:3.23.1",
+        "org.mockito:mockito-core:%s" % MOCKITO_VERSION,
+        "org.mockito:mockito-inline:%s" % MOCKITO_VERSION,
+        "org.mockito:mockito-junit-jupiter:%s" % MOCKITO_VERSION,
+    ],
+    fetch_sources = True,
+    repositories = [
+        "https://repo1.maven.org/maven2",
+    ],
+)
+
+load("@maven//:defs.bzl", "pinned_maven_install")
+
+pinned_maven_install()
+
+# KOTLIN
+rules_kotlin_version = "1.7.1"
+
+rules_kotlin_sha = "fd92a98bd8a8f0e1cdcb490b93f5acef1f1727ed992571232d33de42395ca9b3"
+
+http_archive(
+    name = "io_bazel_rules_kotlin",
+    sha256 = rules_kotlin_sha,
+    urls = ["https://github.com/bazelbuild/rules_kotlin/releases/download/v%s/rules_kotlin_release.tgz" % rules_kotlin_version],
+)
+
+load("@io_bazel_rules_kotlin//kotlin:repositories.bzl", "kotlin_repositories", "kotlinc_version")
+
+kotlin_repositories(
+    compiler_release = kotlinc_version(
+        release = "1.6.20",
+        sha256 = "daf17db1c194f4205f3af67129367a69b388f819177963dc53a7b4b2c4d8ce22",
+    ),
+)
+
+register_toolchains("//:kotlin_toolchain")
+# /KOTLIN
+
+# FOO?
+
+rules_contrib_jvm_version = "86e2cd308a39ff15c6a7d81faafde03e3f12b058"  # in wait of > 0.9.0
+
+rules_contrib_jvm_sha = "bd184b2cfc2c2e46881f4197985ea6470184f7c36c432c9b6e1bc3f93ee6e109"
+
+http_archive(
+    name = "contrib_rules_jvm",
+    sha256 = rules_contrib_jvm_sha,
+    strip_prefix = "rules_jvm-%s" % rules_contrib_jvm_version,
+    #    url = "https://github.com/bazel-contrib/rules_jvm/archive/refs/tags/v%s.tar.gz" % rules_contrib_jvm_version,
+    url = "https://github.com/bazel-contrib/rules_jvm/archive/%s.zip" % rules_contrib_jvm_version,  # in wait of > 0.9.0
+)
+
+load("@contrib_rules_jvm//:repositories.bzl", "contrib_rules_jvm_deps")
+
+contrib_rules_jvm_deps()
+
+load("@contrib_rules_jvm//:setup.bzl", "contrib_rules_jvm_setup")
+
+contrib_rules_jvm_setup()
+
+# /FOO?
+
+# FRONTEND
+
+http_archive(
+    name = "aspect_rules_js",
+    sha256 = "928ba25fa82cfe7983f89118677413dc74dbc5d0360fa969da07ff22a9306052",
+    strip_prefix = "rules_js-1.15.1",
+    url = "https://github.com/aspect-build/rules_js/archive/refs/tags/v1.15.1.tar.gz",
+)
+
+http_archive(
+    name = "aspect_rules_jest",
+    sha256 = "dd596891aa893048d2e8d210fce214459df33d454bf0e77906ebbfaee38f2bbc",
+    strip_prefix = "rules_jest-0.12.1",
+    url = "https://github.com/aspect-build/rules_jest/archive/refs/tags/v0.12.1.tar.gz",
+)
+
+http_archive(
+    name = "aspect_rules_ts",
+    sha256 = "5b501313118b06093497b6429f124b973f99d1eb5a27a1cc372e5d6836360e9d",
+    strip_prefix = "rules_ts-1.0.2",
+    url = "https://github.com/aspect-build/rules_ts/archive/refs/tags/v1.0.2.tar.gz",
+)
+
+load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
+
+rules_js_dependencies()
+
+load("@aspect_rules_jest//jest:dependencies.bzl", "rules_jest_dependencies")
+
+rules_jest_dependencies()
+
+load("@aspect_rules_jest//jest:repositories.bzl", "jest_repositories")
+
+jest_repositories(name = "jest")
+
+load("@jest//:npm_repositories.bzl", jest_npm_repositories = "npm_repositories")
+
+jest_npm_repositories()
+
+load("@aspect_bazel_lib//lib:repositories.bzl", "aspect_bazel_lib_dependencies", "register_jq_toolchains")
+
+aspect_bazel_lib_dependencies(override_local_config_platform = True)
+
+register_jq_toolchains()
+
+load("@aspect_rules_ts//ts:repositories.bzl", "LATEST_VERSION", "rules_ts_dependencies")
+
+rules_ts_dependencies(ts_version = LATEST_VERSION)
+
+load("@rules_nodejs//nodejs:repositories.bzl", "DEFAULT_NODE_VERSION", "nodejs_register_toolchains")
+
+nodejs_register_toolchains(
+    name = "nodejs",
+    node_version = DEFAULT_NODE_VERSION,
+)
+
+load("@aspect_bazel_lib//lib:host_repo.bzl", "host_repo")
+
+host_repo(name = "aspect_bazel_lib_host")
+
+load("@aspect_rules_js//npm:npm_import.bzl", "npm_translate_lock")
+
+#npm_translate_lock(
+#    name = "npm",
+#    no_optional = False,
+#    pnpm_lock = "//:pnpm-lock.yaml",
+#    verify_node_modules_ignored = "//:.bazelignore",
+#)
+
+#load("@npm//:repositories.bzl", "npm_repositories")
+#
+#npm_repositories()
+# /FRONTEND
+
+
+# BAZEL-DIFF
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_jar")
+
+http_jar(
+    name = "bazel_diff",
+    sha256 = "9c4546623a8b9444c06370165ea79a897fcb9881573b18fa5c9ee5c8ba0867e2",
+    urls = [
+        "https://github.com/Tinder/bazel-diff/releases/download/4.3.0/bazel-diff_deploy.jar",
+    ],
+)
+# /BAZEL-DIFF
