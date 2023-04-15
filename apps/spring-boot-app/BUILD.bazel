@@ -1,0 +1,27 @@
+load("@rules_spring//springboot:springboot.bzl", "springboot")
+
+filegroup(
+    name = "srcs",
+    srcs = glob(["src/main/**/*.java"])
+)
+
+springboot_deps = [
+    "@maven//:org_springframework_boot_spring_boot",
+    "@maven//:org_springframework_boot_spring_boot_autoconfigure",
+    "@maven//:org_springframework_boot_spring_boot_starter_web",
+    "@maven//:org_springframework_boot_spring_boot_loader",
+    "@maven//:org_springframework_spring_webmvc",
+]
+
+java_library(
+    name = "demoapp_lib",
+    srcs = [":srcs"],
+    resources = glob(["src/main/resources/**"]),
+    deps = springboot_deps,
+)
+
+springboot(
+    name = "demoapp",
+    boot_app_class = "com.example.demo.DemoApplication",
+    java_library = ":demoapp_lib",
+)

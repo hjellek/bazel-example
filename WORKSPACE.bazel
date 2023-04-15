@@ -1,15 +1,15 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-RULES_JVM_EXTERNAL_TAG = "4.3"
-
-RULES_JVM_EXTERNAL_SHA = "6274687f6fc5783b589f56a2f1ed60de3ce1f99bc4e8f9edef3de43bdf7c6e74"
+RULES_JVM_EXTERNAL_TAG = "5.2"
+RULES_JVM_EXTERNAL_SHA ="f86fd42a809e1871ca0aabe89db0d440451219c3ce46c58da240c7dcdc00125f"
 
 http_archive(
     name = "rules_jvm_external",
-    sha256 = RULES_JVM_EXTERNAL_SHA,
     strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_TAG,
-    url = "https://github.com/bazelbuild/rules_jvm_external/archive/%s.zip" % RULES_JVM_EXTERNAL_TAG,
+    sha256 = RULES_JVM_EXTERNAL_SHA,
+    url = "https://github.com/bazelbuild/rules_jvm_external/releases/download/%s/rules_jvm_external-%s.tar.gz" % (RULES_JVM_EXTERNAL_TAG, RULES_JVM_EXTERNAL_TAG)
 )
+
 load("@rules_jvm_external//:defs.bzl", "maven_install")
 load("@rules_jvm_external//:specs.bzl", "maven")
 
@@ -81,26 +81,26 @@ load("@maven//:defs.bzl", "pinned_maven_install")
 pinned_maven_install()
 
 # KOTLIN
-rules_kotlin_version = "1.7.1"
-
-rules_kotlin_sha = "fd92a98bd8a8f0e1cdcb490b93f5acef1f1727ed992571232d33de42395ca9b3"
-
-http_archive(
-    name = "io_bazel_rules_kotlin",
-    sha256 = rules_kotlin_sha,
-    urls = ["https://github.com/bazelbuild/rules_kotlin/releases/download/v%s/rules_kotlin_release.tgz" % rules_kotlin_version],
-)
-
-load("@io_bazel_rules_kotlin//kotlin:repositories.bzl", "kotlin_repositories", "kotlinc_version")
-
-kotlin_repositories(
-    compiler_release = kotlinc_version(
-        release = "1.6.20",
-        sha256 = "daf17db1c194f4205f3af67129367a69b388f819177963dc53a7b4b2c4d8ce22",
-    ),
-)
-
-register_toolchains("//:kotlin_toolchain")
+#rules_kotlin_version = "1.7.1"
+#
+#rules_kotlin_sha = "fd92a98bd8a8f0e1cdcb490b93f5acef1f1727ed992571232d33de42395ca9b3"
+#
+#http_archive(
+#    name = "io_bazel_rules_kotlin",
+#    sha256 = rules_kotlin_sha,
+#    urls = ["https://github.com/bazelbuild/rules_kotlin/releases/download/v%s/rules_kotlin_release.tgz" % rules_kotlin_version],
+#)
+#
+#load("@io_bazel_rules_kotlin//kotlin:repositories.bzl", "kotlin_repositories", "kotlinc_version")
+#
+#kotlin_repositories(
+#    compiler_release = kotlinc_version(
+#        release = "1.6.20",
+#        sha256 = "daf17db1c194f4205f3af67129367a69b388f819177963dc53a7b4b2c4d8ce22",
+#    ),
+#)
+#
+#register_toolchains("//:kotlin_toolchain")
 # /KOTLIN
 
 # FOO?
