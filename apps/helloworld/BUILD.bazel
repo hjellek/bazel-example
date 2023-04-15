@@ -1,12 +1,12 @@
 genrule(
     name = "content",
     outs = ["content.txt"],
-    cmd = "echo \"Hello World\" >$@"
+    cmd = "echo \"Hello World\" > $@"
 )
 
 genrule(
     name = "replace",
     srcs = [":content"],
     outs = ["replaced.txt"],
-    cmd = "cat $(location :content) | sed 's/World/Foo/' >$@"
+    cmd = "cat $(location :content) | sed 's/World/Foo/' > $@"
 )
