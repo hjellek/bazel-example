@@ -1,0 +1,44 @@
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@npm//:sass/package_json.bzl", sass_bin = "bin")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
+
+npm_link_all_packages()
+
+ts_project(
+    name = "app",
+    srcs = glob([
+        "src/**/*.tsx",
+        "src/**/*.ts",
+        "src/**/*.jsx",
+        "src/**/*.js",
+    ]),
+    deps = [":node_modules"],
+    allow_js = True,
+    declaration = True,
+    declaration_map = True,
+    out_dir = "out",
+    preserve_jsx = True,
+    source_map = True,
+)
+
+filegroup(
+    name = "types",
+    srcs = [":jsx"],
+    output_group = "types",
+)
+
+filegroup(
+    name = "sass_srcs",
+    srcs = glob(["src/**/*.scss"]),
+)
+
+sass_bin.sass(
+        name = "sass_build",
+        args = [
+            "src:css",
+        ],
+        chdir = package_name(),
+        srcs = [":sass_srcs"],
+        out_dirs = ["css"],
+)
