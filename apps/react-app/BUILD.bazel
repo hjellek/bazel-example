@@ -2,24 +2,26 @@ load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@npm//:sass/package_json.bzl", sass_bin = "bin")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@aspect_rules_js//js:defs.bzl", "js_binary")
+load("@aspect_rules_webpack//webpack:defs.bzl", "webpack_bundle", "webpack_devserver")
+load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
 
 npm_link_all_packages()
 
 ts_project(
-    name = "app",
+    name = "ts_build",
     srcs = glob([
         "src/**/*.tsx",
         "src/**/*.ts",
         "src/**/*.jsx",
         "src/**/*.js",
     ]),
-    deps = [":node_modules"],
     allow_js = True,
     declaration = True,
     declaration_map = True,
     out_dir = "out",
     preserve_jsx = True,
     source_map = True,
+    deps = [":node_modules"],
 )
 
 filegroup(
@@ -34,11 +36,39 @@ filegroup(
 )
 
 sass_bin.sass(
-        name = "sass_build",
-        args = [
-            "src:css",
-        ],
-        chdir = package_name(),
-        srcs = [":sass_srcs"],
-        out_dirs = ["css"],
+    name = "sass_build",
+    srcs = [":sass_srcs"],
+    args = [
+        "src:css",
+    ],
+    chdir = package_name(),
+    out_dirs = ["css"],
+)
+
+webpack_bundle(
+    name = "app",
+    srcs = [":ts_build"],
+    node_modules = "//:node_modules",
+    output_dir = True,
+    webpack_config = ":webpack.config.js",
+)
+
+#webpack_devserver(
+#    name = "dev",
+#    node_modules = [":node_modules"],
+#    srcs = [":ts_build", ":sass_build"],
+#    webpack_config = ":webpack.config.js",
+#)
+
+jest_test(
+    name = "test",
+    config = "jest.config.js",
+    data = glob(["src/**/*"]) + [
+        "babel.config.js",
+        ":node_modules",
+        #        ":node_modules/@babel/preset-env",
+        #        ":node_modules/@babel/preset-react",
+        #        ":node_modules/@babel/preset-typescript",
+    ],
+    node_modules = ":node_modules",
 )
