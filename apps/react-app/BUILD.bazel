@@ -53,12 +53,16 @@ webpack_bundle(
     webpack_config = ":webpack.config.js",
 )
 
-#webpack_devserver(
-#    name = "dev",
-#    node_modules = [":node_modules"],
-#    srcs = [":ts_build", ":sass_build"],
-#    webpack_config = ":webpack.config.js",
-#)
+webpack_devserver(
+    name = "dev",
+    chdir = package_name(),
+    data = glob(["src/**/*"]) + [
+        "babel.config.js",
+        ":node_modules",
+    ],
+    node_modules = ":node_modules",
+    webpack_config = ":webpack.config.js",
+)
 
 jest_test(
     name = "test",

@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import './Header.sass';
+import './Header.scss';
 type Props = {
     text: string;
     className?: string;

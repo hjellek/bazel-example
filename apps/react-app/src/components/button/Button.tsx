@@ -1,4 +1,4 @@
-import 'Button.sass';
+import './Button.scss';
 
 type Props = {
     text: string;
