@@ -6,15 +6,14 @@ export const App = () => {
     const [buttonText, setButtonText] = useState("");
     const [headerText, setHeaderText] = useState("");
     useEffect(() => {
-        setButtonText("very button");
-        setHeaderText("very header");
+        setButtonText("Click me!");
+        setHeaderText("My App");
     }, []);
 
     return (
         <>
-            <h1>App!</h1>
-            <Button text={buttonText}/>
             <Header text={headerText}/>
+            <Button text={buttonText}/>
         </>
     )
 };

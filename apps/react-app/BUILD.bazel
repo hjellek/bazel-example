@@ -47,10 +47,15 @@ sass_bin.sass(
 
 webpack_bundle(
     name = "app",
-    srcs = [":ts_build"],
-    node_modules = "//:node_modules",
-    output_dir = True,
+    chdir = package_name(),
+    data = glob(["src/**/*"]) + [
+        "babel.config.js",
+        ":node_modules",
+    ],
+    node_modules = ":node_modules",
     webpack_config = ":webpack.config.js",
+    output_dir = True,
+
 )
 
 webpack_devserver(
@@ -70,9 +75,6 @@ jest_test(
     data = glob(["src/**/*"]) + [
         "babel.config.js",
         ":node_modules",
-        #        ":node_modules/@babel/preset-env",
-        #        ":node_modules/@babel/preset-react",
-        #        ":node_modules/@babel/preset-typescript",
     ],
     node_modules = ":node_modules",
 )

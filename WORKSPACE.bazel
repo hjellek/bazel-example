@@ -201,6 +201,7 @@ rules_webpack_dependencies()
 
 npm_translate_lock(
     name = "npm",
+    npmrc = "//:.npmrc",
     bins = {
         "sass": {
             "sass": ".bin/sass.js",
