@@ -1,13 +1,14 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 RULES_JVM_EXTERNAL_TAG = "5.2"
-RULES_JVM_EXTERNAL_SHA ="f86fd42a809e1871ca0aabe89db0d440451219c3ce46c58da240c7dcdc00125f"
+
+RULES_JVM_EXTERNAL_SHA = "f86fd42a809e1871ca0aabe89db0d440451219c3ce46c58da240c7dcdc00125f"
 
 http_archive(
     name = "rules_jvm_external",
-    strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_TAG,
     sha256 = RULES_JVM_EXTERNAL_SHA,
-    url = "https://github.com/bazelbuild/rules_jvm_external/releases/download/%s/rules_jvm_external-%s.tar.gz" % (RULES_JVM_EXTERNAL_TAG, RULES_JVM_EXTERNAL_TAG)
+    strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_TAG,
+    url = "https://github.com/bazelbuild/rules_jvm_external/releases/download/%s/rules_jvm_external-%s.tar.gz" % (RULES_JVM_EXTERNAL_TAG, RULES_JVM_EXTERNAL_TAG),
 )
 
 load("@rules_jvm_external//:defs.bzl", "maven_install")
@@ -131,16 +132,16 @@ contrib_rules_jvm_setup()
 
 http_archive(
     name = "aspect_rules_js",
-    sha256 = "928ba25fa82cfe7983f89118677413dc74dbc5d0360fa969da07ff22a9306052",
-    strip_prefix = "rules_js-1.15.1",
-    url = "https://github.com/aspect-build/rules_js/archive/refs/tags/v1.15.1.tar.gz",
+    sha256 = "4722264788b92aeca47bf108c5909d94720114d73739e3cff9f48a10b18ef8cd",
+    strip_prefix = "rules_js-1.25.0",
+    url = "https://github.com/aspect-build/rules_js/releases/download/v1.25.0/rules_js-v1.25.0.tar.gz",
 )
 
 http_archive(
     name = "aspect_rules_jest",
-    sha256 = "dd596891aa893048d2e8d210fce214459df33d454bf0e77906ebbfaee38f2bbc",
-    strip_prefix = "rules_jest-0.12.1",
-    url = "https://github.com/aspect-build/rules_jest/archive/refs/tags/v0.12.1.tar.gz",
+    sha256 = "52dc08fd252add240124ef7ccc46df3a505121758dfb96578a3d5f2ebb4c2b40",
+    strip_prefix = "rules_jest-0.18.1",
+    url = "https://github.com/aspect-build/rules_jest/releases/download/v0.18.1/rules_jest-v0.18.1.tar.gz",
 )
 
 http_archive(
@@ -152,9 +153,9 @@ http_archive(
 
 http_archive(
     name = "io_bazel_rules_sass",
-    url = "https://github.com/bazelbuild/rules_sass/archive/1.62.0.zip",
-    strip_prefix = "rules_sass-1.62.0",
     sha256 = "dae8cb1c6e4770c65aff0584f6dd40a8cdc8fe2705b38e5ef6d61f82c3d7325b",
+    strip_prefix = "rules_sass-1.62.0",
+    url = "https://github.com/bazelbuild/rules_sass/archive/1.62.0.zip",
 )
 
 http_archive(
@@ -171,14 +172,6 @@ rules_js_dependencies()
 load("@aspect_rules_jest//jest:dependencies.bzl", "rules_jest_dependencies")
 
 rules_jest_dependencies()
-
-load("@aspect_rules_jest//jest:repositories.bzl", "jest_repositories")
-
-jest_repositories(name = "jest")
-
-load("@jest//:npm_repositories.bzl", jest_npm_repositories = "npm_repositories")
-
-jest_npm_repositories()
 
 load("@aspect_bazel_lib//lib:repositories.bzl", "aspect_bazel_lib_dependencies", "register_jq_toolchains")
 
@@ -202,21 +195,20 @@ load("@aspect_bazel_lib//lib:host_repo.bzl", "host_repo")
 host_repo(name = "aspect_bazel_lib_host")
 
 load("@aspect_rules_js//npm:npm_import.bzl", "npm_translate_lock")
-
 load("@aspect_rules_webpack//webpack:dependencies.bzl", "rules_webpack_dependencies")
 
 rules_webpack_dependencies()
 
 npm_translate_lock(
     name = "npm",
-    no_optional = False,
-    pnpm_lock = "//:pnpm-lock.yaml",
-    verify_node_modules_ignored = "//:.bazelignore",
     bins = {
         "sass": {
             "sass": ".bin/sass.js",
         },
-    }
+    },
+    no_optional = False,
+    pnpm_lock = "//:pnpm-lock.yaml",
+    verify_node_modules_ignored = "//:.bazelignore",
 )
 
 load("@npm//:repositories.bzl", "npm_repositories")
@@ -224,7 +216,6 @@ load("@npm//:repositories.bzl", "npm_repositories")
 npm_repositories()
 
 # /FRONTEND
-
 
 # BAZEL-DIFF
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_jar")
