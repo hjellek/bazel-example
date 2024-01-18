@@ -1,8 +1,10 @@
+package(default_visibility = ["//apps/spring-boot-app:__subpackages__"])
+
 load("@rules_spring//springboot:springboot.bzl", "springboot")
 
 filegroup(
     name = "srcs",
-    srcs = glob(["src/main/**/*.java"])
+    srcs = glob(["src/main/**/*.java"]),
 )
 
 springboot_deps = [
